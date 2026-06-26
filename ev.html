@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+  <link rel="stylesheet" href="ev.css">
+  <script type="text/javascript" src="ev.js" defer></script>
+  <style>
+      .chatbot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #3a506b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .chatbot-icon:hover {
+            transform: scale(1.1);
+        }
+        .chatbot-icon img {
+            width: 30px;
+            height: 30px;
+        }
+        .chatbot {
+            position: fixed;
+            margin-left: 70%;
+            bottom: 80px;
+            width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transform: translateY(300%);
+            transition: transform 0.3s ease;
+        }
+        .chatbot.active {
+            transform: translateY(0);
+        }
+        .chatbot-header {
+            padding: 15px;
+            background-color: #3a506b;
+            color: white;
+            cursor: pointer;
+        }
+        .chatbot-body {
+            height: 300px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+        }
+        .chatbot-input button {
+            padding: 10px 15px;
+            background-color: #3a506b;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+        .user-message {
+            background-color: #e6f7ff;
+            margin-left: auto;
+            border-top-right-radius: 0;
+        }
+        .bot-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+            border-top-left-radius: 0;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: white;
+        }
+        .alert-success {
+            background-color: #4CAF50;
+        }
+        .alert-error {
+            background-color: #f44336;
+        }
+    </style>
+  </style>
+</head>
+<body>
+  <nav id="sidebar">
+    <ul>
+      <li>
+        <span class="logo">EVENTS</span>
+        <button onclick=toggleSidebar() id="toggle-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m313-480 155 156q11 11 11.5 27.5T468-268q-11 11-28 11t-28-11L228-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T468-692q11 11 11 28t-11 28L313-480Zm264 0 155 156q11 11 11.5 27.5T732-268q-11 11-28 11t-28-11L492-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T732-692q11 11 11 28t-11 28L577-480Z"/></svg>
+        </button>
+      </li>
+      <li class="active">
+        <a href="ev.html">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-200q0-17 11.5-28.5T400-440h160q17 0 28.5 11.5T600-400v200h120v-360L480-740 240-560v360Zm-80 0v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23.5 56.5T720-120H560q-17 0-28.5-11.5T520-160v-200h-80v200q0 17-11.5 28.5T400-120H240q-33 0-56.5-23.5T160-200Zm320-270Z"/></svg>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="dashboard.html">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h207q16 0 30.5 6t25.5 17l57 57h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Zm0-80h640v-400H447l-80-80H160v480Zm0 0v-480 480Zm400-160v40q0 17 11.5 28.5T600-320q17 0 28.5-11.5T640-360v-40h40q17 0 28.5-11.5T720-440q0-17-11.5-28.5T680-480h-40v-40q0-17-11.5-28.5T600-560q-17 0-28.5 11.5T560-520v40h-40q-17 0-28.5 11.5T480-440q0 17 11.5 28.5T520-400h40Z"/></svg>
+          <span>EVENTS</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="tec.html">TECHNICAL</a></li>
+            <li><a href="non.html">NON-TECNICAL</a></li>
+            <li><a href="#">Project</a></li>
+          </div>
+        </ul>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m221-313 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-228q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm0-320 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-548q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm339 353q-17 0-28.5-11.5T520-320q0-17 11.5-28.5T560-360h280q17 0 28.5 11.5T880-320q0 17-11.5 28.5T840-280H560Zm0-320q-17 0-28.5-11.5T520-640q0-17 11.5-28.5T560-680h280q17 0 28.5 11.5T880-640q0 17-11.5 28.5T840-600H560Z"/></svg>
+          <span>Todo-Lists</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="#">Work</a></li>
+            <li><a href="#">Private</a></li>
+            <li><a href="#">Coding</a></li>
+            <li><a href="#">Gardening</a></li>
+            <li><a href="#">School</a></li>
+          </div>
+        </ul>
+      </li>
+      <li>
+      </li>
+      <li>
+        <a href="profile.html">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
+          <span>Profile</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <main>
+   
+      <div>
+        <div class="carousel">
+
+          <div class="list">
+  
+              <div class="item" style="background-image: url(dn.jpg);">
+                  <div class="content">
+                      <div class="title">DANCING</div>
+                      <div class="name">NON-Technical</div>
+                      <div class="des">organiged by MAHESH BORRA <br> registarion fee per head $100 <br>contact 91219745</div>
+                      <div class="btn">
+                          <button>DETAILS</button>
+                          <a href="log.html"><button h>REGISTER</button></a>
+                      </div>
+                  </div>
+              </div>
+  
+              <div class="item" style="background-image: url(Deb.jpg);">
+                <div class="content">
+                    <div class="title">DEBUGGUBG</div>
+                    <div class="name">Technical</div>
+                    <div class="des">organiged by MAHESH BORRA <br> registarion fee per head $100 <br>contact 91219745</div>
+                    <div class="btn">
+                        <button>DETAILS</button>
+                        <a href="log.html"><button h>REGISTER</button></a>
+                    </div>
+                </div>
+            </div>
+  
+            <div class="item" style="background-image: url(tug.jpg);">
+              <div class="content">
+                  <div class="title">TUG OF WAR</div>
+                  <div class="name">NON-Technical</div>
+                  <div class="des">organiged by MAHESH BORRA <br> registarion fee per head $100 <br>contact 91219745</div>
+                  <div class="btn">
+                      <button>DETAILS</button>
+                      <a href="log.html"><button h>REGISTER</button></a>
+                  </div>
+              </div>
+          </div>
+          <div class="item" style="background-image: url(techqu.jpg);">
+            <div class="content">
+                <div class="title">QUIZ</div>
+                <div class="name">Technical</div>
+                <div class="des">organiged by MAHESH BORRA <br> registarion fee per head $100 <br>contact 91219745</div>
+                <div class="btn">
+                    <button>DETAILS</button>
+                    <a href="log.html"><button h>REGISTER</button></a>
+                </div>
+            </div>
+        </div>
+          
+  
+        <div class="item" style="background-image: url(art.jpg);">
+          <div class="content">
+              <div class="title">DROING</div>
+              <div class="name">non-Technical</div>
+              <div class="des">organiged by MAHESH BORRA <br> registarion fee per head $100 <br>contact 91219745</div>
+              <div class="btn">
+                  <button>DETAILS</button>
+                  <a href="log.html"><button h>REGISTER</button></a>
+              </div>
+          </div>
+      </div>
+  
+      <div class="item" style="background-image: url(proex.jpg);">
+        <div class="content">
+            <div class="title">PROJECT EXPO</div>
+            <div class="name">Technical</div>
+            <div class="des">organiged by MAHESH BORRA <br> registarion fee per head $100 <br>contact 91219745</div>
+            <div class="btn">
+                <button>DETAILS</button>
+                <a href="log.html"><button h>REGISTER</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+  
+          <!--next prev button-->
+          <div class="arrows">
+              <button class="prev"><</button>
+              <button class="next">></button>
+          </div>
+  
+  
+          <!-- time running -->
+          <div class="timeRunning"></div>
+  
+      </div>
+      <br>
+      <br>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      <section class="section__container destination__container" id="about">
+        <h2 class="section__header">Technical Events</h2>
+        <p class="section__description">
+          A technical event typically refers to any gathering or conference focused on technology, innovation, and specific technical subjects
+        </p>
+        <div class="destination__grid">
+          <div class="destination__card">
+            <img src="proex.jpg" alt="destination" />
+            <div class="destination__card__details">
+              <div>
+                <h4>PROJECT EXPO</h4>
+                <p>New York City, USA</p>
+              </div>
+              <div class="destination__rating">
+                <span><i class="ri-star-fill"></i></span>
+                <a href="log.html">Register</a> 
+              </div>
+            </div>
+          </div>
+          <div class="destination__card">
+            <img src="techqu.jpg" alt="destination" />
+            <div class="destination__card__details">
+              <div>
+                <h4>TECHNICAL QUIZ</h4>
+                <p>Paris, France</p>
+              </div>
+              <div class="destination__rating">
+                <span><i class="ri-star-fill"></i></span>
+               <a href="log.html">Register</a> 
+              </div>
+            </div>
+          </div>
+          <div class="destination__card">
+            <img src="deb.jpg" alt="destination" />
+            <div class="destination__card__details">
+              <div>
+                <h4>Debugging</h4>
+                <p>Bali, Indonesia</p>
+              </div>
+              <div class="destination__rating">
+                <span><i class="ri-star-fill"></i></span>
+                <a href="log.html">Register</a> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section__container destination__container" id="about">
+        <h2 class="section__header"> NON Technical Events</h2>
+        <p class="section__description">
+          A technical event typically refers to any gathering or conference focused on technology, innovation, and specific technical subjects
+        </p>
+        <div class="destination__grid">
+          <div class="destination__card">
+            <img src="dn.jpg" alt="destination" />
+            <div class="destination__card__details">
+              <div>
+                <h4>DANCING</h4>
+                <p>New York City, USA</p>
+              </div>
+              <div class="destination__rating">
+                <span><i class="ri-star-fill"></i></span>
+                <a href="log.html">Register</a> 
+              </div>
+            </div>
+          </div>
+          <div class="destination__card">
+            <img src="tug.jpg" alt="destination" />
+            <div class="destination__card__details">
+              <div>
+                <h4>TUG OF WAR</h4>
+                <p>Paris, France</p>
+              </div>
+              <div class="destination__rating">
+                <span><i clas Regis="ri-star-fill"></i></span>
+                <a href="log.html">Register</a> 
+              </div>
+            </div>
+          </div>
+          <div class="destination__card">
+            <img src="art.jpg" alt="destination" />
+            <div class="destination__card__details">
+              <div>
+                <h4>Drawing Dompetition</h4>
+                <p>Bali, Indonesia</p>
+              </div>
+              <div class="destination__rating">
+                <span><i class="ri-star-fill"></i></span>
+                <a href="log.html">Register</a> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section class="section__container journey__container" id="tour">
+        <h2 class="section__header">STUDENT REGISTER INFORMATION</h2>
+        <p class="section__description">
+          Effortless Planning for Your REGISTERATION
+        </p>
+        <div class="journey__grid">
+          <div class="journey__card">
+            <div class="journey__card__bg">
+              <span><i class="ri-bookmark-3-line"></i></span>
+              <h4>STUDENT TECHNICAL Registertion</h4>
+            </div>
+            <div class="journey__card__content">
+              <span><i class="ri-bookmark-3-line"></i></span>
+              <h4>YOU REGISTER</h4>
+             <h1>.debuging</h1>
+            </div>
+          </div>
+          <div class="journey__card">
+            <div class="journey__card__bg">
+              <span><i class="ri-landscape-fill"></i></span>
+              <h4>STUDENT NON-TECHNICAL Registertion</h4>
+            </div>
+            <div class="journey__card__content">
+              <span><i class="ri-landscape-fill"></i></span>
+              <h4>YOU REGESTER</h4>
+              <H1>.dance <br>.tag of WAR</H1>
+             
+            </div>
+          </div>
+          <div class="journey__card">
+            <div class="journey__card__bg">
+              <span><i class="ri-map-2-line"></i></span>
+              <h4>STUDENT Events</h4>
+            </div>
+            <div class="journey__card__content">
+              <span><i class="ri-map-2-line"></i></span>
+              <h4>YOU REGISTER</h4>
+             <h1>.debuging <br>.dance <br>.tag of WAR</h1>
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <section class="section__container showcase__container" id="package">
+        <div class="showcase__image">
+          <img src="st.jpg" alt="showcase" />
+        </div>
+        <div class="showcase__content">
+          <h4>PBR Visvodaya Institute </h4>
+          <p>
+            Embark on a journey like no other with Skywings, where your travel
+            dreams come to life. Our mission is to inspire and facilitate your
+            adventures, whether you seek the vibrant energy of bustling
+            cityscapes, the serene beauty of pristine beaches, or the captivating
+            history of ancient landmarks. At Skywings, we provide expertly curated
+            destinations and personalized itineraries, ensuring that every trip is
+            tailored to your unique preferences. Discover hidden gems, immerse
+            yourself in diverse cultures, and create unforgettable memories that
+            will last a lifetime.
+          </p>
+          <p>
+            With Skywings as your ultimate travel companion, exploring the wonders
+            of the world has never been easier. Our insider tips and local
+            insights give you the tools to navigate new places with confidence and
+            excitement. From the moment you start planning to the day you return
+            home, we are dedicated to making your travel experience seamless and
+            enriching.
+          </p>
+          <div class="showcase__btn">
+            <button class="btn">
+              TAP TO Register
+              <span><i class="ri-arrow-right-line"></i></span>
+            </button>
+          </div>
+        </div>
+      </section>
+          <h4>TODAY COLLEGE OVERALL EVENTS REGISTERATIONS</h4>
+      <section class="section__container banner__container">
+        <div class="banner__card">
+          <h4>142</h4><br>
+          <p>TODAY TECHNICAL REGISTERATIONs</p>
+        </div>
+        <div class="banner__card">
+          <h4>252</h4><br>
+          <p>TODAY NON-TECHNICAL REGISTERATIONs</p>
+        </div>
+        <div class="banner__card">
+          <h4>394</h4><br>
+          <p>TODAY EVENTS REGISTERATIONS</p>
+        </div>
+      </section>
+      </div>
+    </div>
+  </main>
+  <div class="chatbot-icon" id="chatbot-icon">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="Chatbot Icon">
+</div>
+
+<!-- Chatbot -->
+<div class="chatbot" id="chatbot">
+    <div class="chatbot-header">
+        <strong>College Assistant</strong>
+    </div>
+    <div class="chatbot-body" id="chatbot-body">
+        <div class="chat-message bot-message">
+            Hello! I'm your college assistant. How can I help you today?
+        </div>
+    </div>
+    <form method="post" class="chatbot-input" id="chatbot-form">
+        <input type="text" name="query" id="chatbot-query" placeholder="Type your question here..." required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+  <script src="ev.js"></script>
+</body>
+</html>
